@@ -1,0 +1,54 @@
+#include <Keypad.h>
+
+#define Password_Length 8
+char Data[Password_Length];
+char pass[Password_Length] = "1234";
+int lockOutput = 13;
+byte data_count = 0;
+char customKey;
+const byte ROWS = 4;
+const byte COLS = 3;
+ 
+
+char hexaKeys[ROWS][COLS] = {
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', '8', '9'},
+  {'*', '0', '#'}
+};
+ 
+
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3};
+ 
+
+Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
+ 
+void setup() {
+  Serial.begin(9600);
+  pinMode(10,OUTPUT);
+  pinMode(11, OUTPUT);
+}
+ 
+void loop() {
+  char customKey = customKeypad.getKey();
+  if (customKey) {
+    Data[data_count] = customKey;
+    data_count++;
+  }
+  if (customKey) {
+    Serial.println(customKey);
+  }
+  if (digitalRead(10) == HIGH) {
+    digitalWrite(10, LOW);
+  }
+  if (digitalRead(11) == HIGH) {
+    digitalWrite(11, LOW);
+  }
+    if (!strcmp(Data, pass)) {
+      digitalWrite(11, HIGH);
+    }
+    else {
+      digitalWrite(10, HIGH);
+    }
+  }
